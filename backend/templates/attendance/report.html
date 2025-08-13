@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير الحضور - نظام إدارة المدرسة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .report-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .report-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .report-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .report-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-numbers {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+        }
+        
+        .report-number {
+            text-align: center;
+        }
+        
+        .report-number .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .report-number .label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .rate-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        .weekly-report {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .report-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .report-header h3 {
+            color: #333;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .rate-cell {
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .report-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>نظام إدارة المدرسة</h1>
+        <div class="nav-links">
+            <a href="/dashboard">الرئيسية</a>
+            <a href="/students">الطلاب</a>
+            <a href="/attendance">الحضور</a>
+            <a href="/grades">الدرجات</a>
+            <a href="/logout">تسجيل الخروج</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2>تقرير الحضور الأسبوعي</h2>
+            <a href="/attendance" class="btn-secondary">تسجيل الحضور</a>
+        </div>
+        
+        <div class="report-cards">
+            {% for day in weekly_report %}
+                <div class="report-card">
+                    <h3>{{ day.day_name }}</h3>
+                    <div class="report-date">{{ day.date }}</div>
+                    <div class="report-numbers">
+                        <div class="report-number">
+                            <div class="value">{{ day.present }}</div>
+                            <div class="label">حاضر</div>
+                        </div>
+                        <div class="report-number">
+                            <div class="value">{{ day.total }}</div>
+                            <div class="label">إجمالي</div>
+                        </div>
+                    </div>
+                    <div class="rate-bar">
+                        <div class="rate-fill" style="width: {{ day.rate }}%"></div>
+                    </div>
+                    <div class="rate-cell">{{ day.rate }}%</div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="weekly-report">
+            <div class="report-header">
+                <h3>التفاصيل الأسبوعية</h3>
+            </div>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>اليوم</th>
+                        <th>الحاضرون</th>
+                        <th>الإجمالي</th>
+                        <th>نسبة الحضور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in weekly_report %}
+                    <tr>
+                        <td>{{ day.date }}</td>
+                        <td>{{ day.day_name }}</td>
+                        <td>{{ day.present }}</td>
+                        <td>{{ day.total }}</td>
+                        <td class="rate-cell">{{ day.rate }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

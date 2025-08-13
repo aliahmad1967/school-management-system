@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير الدرجات - نظام إدارة المدرسة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-print {
+            background: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-left: 1rem;
+        }
+        
+        .btn-print:hover {
+            transform: translateY(-2px);
+        }
+        
+        .report-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .report-header h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .overall-average {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 1rem 0;
+        }
+        
+        .subjects-report {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .report-table-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .report-table-header h3 {
+            color: #333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .average-cell {
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .count-cell {
+            color: #28a745;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-top: 2rem;
+        }
+        
+        .chart-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-header h3 {
+            color: #333;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+        
+        .bar {
+            width: 40px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .bar-label {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+            color: #666;
+        }
+        
+        @media print {
+            .navbar, .page-header, .btn-print, .chart-container {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .container {
+                padding: 0;
+                max-width: 100%;
+            }
+            
+            .report-header, .subjects-report {
+                box-shadow: none;
+                border-radius: 0;
+                page-break-inside: avoid;
+            }
+            
+            th, td {
+                border: 1px solid #000 !important;
+            }
+            
+            table {
+                page-break-inside: avoid;
+            }
+            
+            .subjects-report {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .bar-chart {
+                flex-wrap: wrap;
+                height: auto;
+            }
+            
+            .bar-item {
+                margin: 1rem;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>نظام إدارة المدرسة</h1>
+        <div class="nav-links">
+            <a href="/dashboard">الرئيسية</a>
+            <a href="/students">الطلاب</a>
+            <a href="/attendance">الحضور</a>
+            <a href="/grades">الدرجات</a>
+            <a href="/logout">تسجيل الخروج</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2>تقرير الدرجات</h2>
+            <div>
+                <button class="btn-print" onclick="window.print()">طباعة التقرير</button>
+                <a href="/grades" class="btn-secondary">رجوع</a>
+            </div>
+        </div>
+        
+        <div class="report-header">
+            <h3>تقرير الأداء العام</h3>
+            <p>متوسط الأداء العام لجميع المواد</p>
+            <div class="overall-average" id="overall-average">جاري الحساب...</div>
+            <p>نسبة نجاح عامة</p>
+        </div>
+        
+        {% if subject_averages and subject_averages|length > 0 %}
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>متوسط الدرجات حسب المادة</h3>
+            </div>
+            
+            <div class="bar-chart">
+                {% for subject in subject_averages %}
+                <div class="bar-item">
+                    <div class="bar" style="height: {{ (subject.average / 100) * 150 }}px"></div>
+                    <div class="bar-label">{{ subject.subject }}</div>
+                    <div class="bar-label">{{ subject.average }}%</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="subjects-report">
+            <div class="report-table-header">
+                <h3>تفاصيل المواد</h3>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>عدد الدرجات المسجلة</th>
+                        <th>المتوسط</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subject_averages %}
+                    <tr>
+                        <td>{{ subject.subject }}</td>
+                        <td class="count-cell">{{ subject.count }}</td>
+                        <td class="average-cell">{{ subject.average }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="subjects-report">
+            <div class="report-table-header">
+                <h3>تفاصيل المواد</h3>
+            </div>
+            <div style="padding: 2rem; text-align: center; color: #666;">
+                <p>لا توجد بيانات درجات لعرضها</p>
+                <p>يرجى إدخال بعض الدرجات أولاً لعرض التقرير</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // حساب ومعدل عام الدرجات
+        document.addEventListener('DOMContentLoaded', function() {
+            const averages = [
+                {% for subject in subject_averages %}
+                {{ subject.average }},
+                {% endfor %}
+            ];
+            
+            if (averages.length > 0) {
+                const overallAverage = averages.reduce((a, b) => a + b, 0) / averages.length;
+                document.getElementById('overall-average').textContent = overallAverage.toFixed(2) + '%';
+            } else {
+                document.getElementById('overall-average').textContent = '0%';
+            }
+        });
+        
+        // وظيفة طباعة محسنة
+        function printReport() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

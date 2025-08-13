@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة الطالب - {{ student.full_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .card-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 2px solid #667eea;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .student-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            overflow: hidden;
+            border: 3px solid #667eea;
+        }
+        
+        .student-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .student-photo .default-photo {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+        }
+        
+        .info-group {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .qr-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .qr-label {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            background: white;
+        }
+        
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .print-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: transform 0.2s;
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            padding: 0.75rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .print-btn, .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card-header">
+            <h1>مدرسة المستقبل</h1>
+            <p>بطاقة الطالب</p>
+        </div>
+        
+        <div class="card-body">
+            <div class="student-photo">
+                {% if student.photo_path %}
+                    <img src="/{{ student.photo_path }}" alt="صورة الطالب">
+                {% else %}
+                    <div class="default-photo">👤</div>
+                {% endif %}
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">الاسم الكامل</div>
+                <div class="info-value">{{ student.full_name }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">الرقم التعريفي</div>
+                <div class="info-value">{{ student.student_id }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">الصف</div>
+                <div class="info-value">{{ student.grade }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">رقم ولي الأمر</div>
+                <div class="info-value">{{ student.parent_phone or 'غير متوفر' }}</div>
+            </div>
+            
+       <div class="qr-section">
+    <div class="qr-label">رمز QR للطالب</div>
+    <div class="qr-code">
+        {% if qr_code %}
+            <img src="data:image/png;base64,{{ qr_code }}" alt="رمز QR">
+        {% else %}
+            <div style="padding: 20px; text-align: center; color: #666;">رمز QR</div>
+        {% endif %}
+    </div>
+    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #666;">
+        امسح الرمز لعرض بيانات الطالب
+    </div>
+</div>
+            
+            <button class="print-btn" onclick="window.print()">طباعة البطاقة</button>
+            
+            <div class="actions">
+                <a href="/students" class="btn-secondary">العودة للقائمة</a>
+                <a href="/students/{{ student.id }}/edit" class="btn-secondary">تعديل البيانات</a>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // توليد رمز QR باستخدام JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentData = {
+            id: {{ student.id }},
+            name: "{{ student.full_name }}",
+            student_id: "{{ student.student_id }}",
+            grade: "{{ student.grade }}"
+        };
+        
+        const qrData = JSON.stringify(studentData);
+        
+        // إنشاء رمز QR محليًا باستخدام qrcode.js
+        try {
+            // إنشاء عنصر canvas مؤقت
+            const canvas = document.createElement('canvas');
+            // استخدام مكتبة QRCode.js إذا كانت متوفرة
+            // أو إنشاء رمز QR محليًا
+            
+            // كحل بديل بسيط، نستخدم رابط محلي
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=150x150&format=png`;
+            document.getElementById('qr-code-img').src = qrUrl;
+        } catch (error) {
+            // في حالة الخطأ، عرض رسالة بسيطة
+            document.querySelector('.qr-code').innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">رمز QR</div>';
+        }
+    });
+</script>
+</body>
+</html>

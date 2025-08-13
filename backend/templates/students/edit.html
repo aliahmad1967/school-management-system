@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل بيانات الطالب - {{ student.full_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .container {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .current-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #667eea;
+        }
+        
+        .current-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .current-photo .default {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #999;
+            background: #e9ecef;
+        }
+        
+        .student-details h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .student-details p {
+            color: #666;
+            margin: 0.25rem 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group input[type="file"] {
+            padding: 0.5rem;
+        }
+        
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px dashed #ddd;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .photo-preview .default {
+            color: #999;
+            font-size: 2rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>نظام إدارة المدرسة</h1>
+        <div class="nav-links">
+            <a href="/dashboard">الرئيسية</a>
+            <a href="/students">الطلاب</a>
+            <a href="/attendance">الحضور</a>
+            <a href="/grades">الدرجات</a>
+            <a href="/logout">تسجيل الخروج</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2>تعديل بيانات الطالب</h2>
+        </div>
+        
+        <div class="student-info">
+            <div class="current-photo">
+                {% if student.photo_path %}
+                    <img src="/{{ student.photo_path }}" alt="صورة الطالب الحالية">
+                {% else %}
+                    <div class="default">👤</div>
+                {% endif %}
+            </div>
+            <div class="student-details">
+                <h3>{{ student.full_name }}</h3>
+                <p><strong>الرقم التعريفي:</strong> {{ student.student_id }}</p>
+                <p><strong>الصف:</strong> {{ student.grade }}</p>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="student_id">الرقم التعريفي</label>
+                    <input type="text" id="student_id" name="student_id" value="{{ student.student_id }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="full_name">الاسم الكامل</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ student.full_name }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grade">الصف</label>
+                    <select id="grade" name="grade" required>
+                        <option value="الصف الأول" {% if student.grade == 'الصف الأول' %}selected{% endif %}>الصف الأول</option>
+                        <option value="الصف الثاني" {% if student.grade == 'الصف الثاني' %}selected{% endif %}>الصف الثاني</option>
+                        <option value="الصف الثالث" {% if student.grade == 'الصف الثالث' %}selected{% endif %}>الصف الثالث</option>
+                        <option value="الصف الرابع" {% if student.grade == 'الصف الرابع' %}selected{% endif %}>الصف الرابع</option>
+                        <option value="الصف الخامس" {% if student.grade == 'الصف الخامس' %}selected{% endif %}>الصف الخامس</option>
+                        <option value="الصف السادس" {% if student.grade == 'الصف السادس' %}selected{% endif %}>الصف السادس</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="parent_phone">رقم ولي الأمر</label>
+                    <input type="text" id="parent_phone" name="parent_phone" value="{{ student.parent_phone or '' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="photo">صورة الطالب الجديدة (اختياري)</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                    <div class="photo-preview">
+                        <div class="default">👤</div>
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                        اتركه فارغاً إذا كنت لا تريد تغيير الصورة الحالية
+                    </p>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/students" class="btn btn-secondary">إلغاء</a>
+                    <button type="submit" class="btn btn-primary">تحديث البيانات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // معاينة الصورة قبل الرفع
+        document.getElementById('photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.querySelector('.photo-preview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="معاينة الصورة">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '<div class="default">👤</div>';
+            }
+        });
+    </script>
+</body>
+</html>

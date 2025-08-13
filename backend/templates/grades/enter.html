@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدخال الدرجات - نظام إدارة المدرسة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .grades-form {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-header h3 {
+            color: #333;
+        }
+        
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .grade-input {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .students-table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+            
+            .grade-input {
+                width: 80px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>نظام إدارة المدرسة</h1>
+        <div class="nav-links">
+            <a href="/dashboard">الرئيسية</a>
+            <a href="/students">الطلاب</a>
+            <a href="/attendance">الحضور</a>
+            <a href="/grades">الدرجات</a>
+            <a href="/logout">تسجيل الخروج</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2>إدخال الدرجات</h2>
+            <a href="/grades" class="btn btn-secondary">رجوع</a>
+        </div>
+        
+        <div class="form-container">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="subject">المادة</label>
+                    <input type="text" id="subject" name="subject" required placeholder="مثال: الرياضيات">
+                </div>
+                
+                <div class="form-group">
+                    <label for="exam_type">نوع الامتحان</label>
+                    <select id="exam_type" name="exam_type">
+                        <option value="">اختر النوع</option>
+                        <option value="اختبار">اختبار</option>
+                        <option value="واجب">واجب</option>
+                        <option value="مشروع">مشروع</option>
+                        <option value="امتحان نصفي">امتحان نصفي</option>
+                        <option value="امتحان نهائي">امتحان نهائي</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="max_grade">الدرجة القصوى</label>
+                    <input type="number" id="max_grade" name="max_grade" value="100" min="1" step="0.1" required>
+                </div>
+                
+                <div class="grades-form">
+                    <div class="form-header">
+                        <h3>درجات الطلاب</h3>
+                    </div>
+                    
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>الرقم التعريفي</th>
+                                <th>الاسم الكامل</th>
+                                <th>الصف</th>
+                                <th>الدرجة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ student.student_id }}</td>
+                                <td>{{ student.full_name }}</td>
+                                <td>{{ student.grade }}</td>
+                                <td>
+                                    <input type="number" name="grade_{{ student.id }}" 
+                                           class="grade-input" min="0" step="0.1" 
+                                           placeholder="الدرجة">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: left;">
+                    <button type="submit" class="btn btn-primary">حفظ الدرجات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
